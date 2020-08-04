@@ -1,8 +1,10 @@
 import React from 'react';
-import { Image, Button } from 'react-native';
+import { Image } from 'react-native';
 
+import Input from '../../components/input';
 import { Container, Title } from './styles';
 import logoImg from '../../assets/logo.png';
+import Button from '../../components/button';
 
 interface SignInProps {
   navigation: any;
@@ -14,10 +16,10 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
       <Image source={logoImg} />
       <Title> Faça seu Login </Title>
 
-      <Button
-        title="Go to SignUp"
-        onPress={() => navigation.navigate('SignUp')}
-      />
+      <Input name="Email" icon="mail" placeholder="Email" />
+      <Input name="Password" icon="lock" placeholder="Senha" />
+
+      <Button onPress={() => navigation.navigate('SignUp')}> Entrar </Button>
     </Container>
   );
 };
