@@ -1,4 +1,6 @@
 import React from 'react';
+import Icon from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
 import {
   Image,
   View,
@@ -6,7 +8,6 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
 
 import Input from '../../components/input';
 import logoImg from '../../assets/logo.png';
@@ -20,11 +21,9 @@ import {
   CreateAccountText,
 } from './styles';
 
-interface SignInProps {
-  navigation: any;
-}
+const SignIn: React.FC = () => {
+  const navigation = useNavigation();
 
-const SignIn: React.FC<SignInProps> = ({ navigation }) => {
   return (
     <>
       {/* Por padrão, o IOS coloca o teclado em cima de toda a tela, ao invés de deslizá-la para cima */}
@@ -47,8 +46,8 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
               <Title> Faça seu Login </Title>
             </View>
 
-            <Input name="Email" icon="mail" placeholder="Email" />
-            <Input name="Password" icon="lock" placeholder="Senha" />
+            <Input name="email" icon="mail" placeholder="Email" />
+            <Input name="password" icon="lock" placeholder="Senha" />
 
             <Button onPress={() => null}> Entrar </Button>
 
