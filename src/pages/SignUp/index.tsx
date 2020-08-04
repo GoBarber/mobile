@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native';
 
-import { Container } from './styles';
+import { Container, Title } from './styles';
 
 interface SignUpProps {
   navigation: any;
@@ -10,6 +10,7 @@ interface SignUpProps {
 const SignUp: React.FC<SignUpProps> = ({ navigation }) => {
   return (
     <Container>
+      <Title> Faça seu Cadastro </Title>
       <Button
         title="Go to SignIn"
         onPress={() => navigation.navigate('SignIn')}
