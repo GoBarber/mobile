@@ -13,13 +13,16 @@ import {
   Alert,
 } from 'react-native';
 
-import getValidationErrors from '../../utils/getValidationErrors';
+import api from '../../services/api';
+
 import Input from '../../components/input';
 import logoImg from '../../assets/logo.png';
 import Button from '../../components/button';
+
+import { signUpSchema, ValidationError } from './dataSchema';
+import getValidationErrors from '../../utils/getValidationErrors';
+
 import { Container, Title, BackButton, BackText } from './styles';
-import { signUpSchema } from './dataSchema';
-import { ValidationError } from '../SignIn/dataSchema';
 
 interface SignUpFormData {
   name: string;
@@ -34,26 +37,32 @@ const SignUp: React.FC = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      await signUpSchema.validate(data, { abortEarly: false });
+        await signUpSchema.validate(data, { abortEarly: false });
 
-      // await api.post('/users', data);
-    } catch (err) {
-      if (err instanceof ValidationError) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors);
+        await api.post('/users', data);
+        Alert.alert(
+          'Cadastro feito com sucesso!',
+          'Você já pode fazer login na aplicação',
+        );
 
-        console.log('\n\nCade o erro?');
-        console.log(errors);
+        navigation.goBack();
+      } catch (err) {
+        if (err instanceof ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        }
+
+        if ('err.response.data' in err)
+          Alert.alert('Erro na Autenticação', err.response.data.message);
       }
-
-      if ('err.response.data' in err)
-        Alert.alert('Erro na Autenticação', err.response.data.message);
-    }
-  }, []);
+    },
+    [navigation],
+  );
 
   return (
     <>
