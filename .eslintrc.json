@@ -25,6 +25,7 @@
         "prettier"
     ],
     "rules": {
+      "@typescript-eslint/ban-ts-comment": "off",
       "prettier/prettier": "error",
       "@typescript-eslint/explicit-module-boundary-types": "error",
       "react-hooks/rules-of-hooks": "error",
