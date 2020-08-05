@@ -10,11 +10,15 @@ import {
   Platform,
   ScrollView,
   TextInput,
+  Alert,
 } from 'react-native';
 
 import Input from '../../components/input';
 import logoImg from '../../assets/logo.png';
 import Button from '../../components/button';
+import { signInSchema } from './dataSchema';
+import { ValidationError } from '../SignUp/dataSchema';
+import getValidationErrors from '../../utils/getValidationErrors';
 import {
   Container,
   Title,
@@ -30,8 +34,25 @@ const SignIn: React.FC = () => {
 
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignIn = useCallback((data: Record<string, unknown>) => {
-    console.log(data);
+  const handleSignIn = useCallback(async (data) => {
+    try {
+      formRef.current?.setErrors({});
+
+      await signInSchema.validate(data, { abortEarly: false });
+
+      // await signIn({ email: data.email, password: data.password });
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        const errors = getValidationErrors(err);
+        formRef.current?.setErrors(errors);
+
+        console.log('\n\nCade o erro?');
+        console.log(errors);
+      }
+
+      if ('err.response.data' in err)
+        Alert.alert('Erro na Autenticação', err.response.data.message);
+    }
   }, []);
 
   return (
