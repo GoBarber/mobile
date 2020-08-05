@@ -1,4 +1,6 @@
-import React from 'react';
+import { Form } from '@unform/mobile';
+import { FormHandles } from '@unform/core';
+import React, { useCallback, useRef } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -16,6 +18,11 @@ import { Container, Title, BackButton, BackText } from './styles';
 
 const SignUp: React.FC = () => {
   const navigation = useNavigation();
+  const formRef = useRef<FormHandles>(null);
+
+  const handleSignUp = useCallback((data: Record<string, unknown>) => {
+    console.log(data);
+  }, []);
 
   return (
     <>
@@ -34,12 +41,15 @@ const SignUp: React.FC = () => {
             <View>
               <Title> Crie sua Conta </Title>
             </View>
+            <Form ref={formRef} onSubmit={handleSignUp}>
+              <Input name="name" icon="user" placeholder="Nome" />
+              <Input name="email" icon="mail" placeholder="Email" />
+              <Input name="password" icon="lock" placeholder="Senha" />
 
-            <Input name="name" icon="user" placeholder="Nome" />
-            <Input name="email" icon="mail" placeholder="Email" />
-            <Input name="password" icon="lock" placeholder="Senha" />
-
-            <Button onPress={() => null}> Entrar </Button>
+              <Button onPress={() => formRef.current?.submitForm()}>
+                Cadastrar
+              </Button>
+            </Form>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
