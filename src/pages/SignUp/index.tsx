@@ -45,6 +45,7 @@ const SignUp: React.FC = () => {
         await signUpSchema.validate(data, { abortEarly: false });
 
         await api.post('/users', data);
+
         Alert.alert(
           'Cadastro feito com sucesso!',
           'Você já pode fazer login na aplicação',
@@ -57,7 +58,7 @@ const SignUp: React.FC = () => {
           formRef.current?.setErrors(errors);
         }
 
-        if ('err.response.data' in err)
+        if (err.response.data.message)
           Alert.alert('Erro na Autenticação', err.response.data.message);
       }
     },

@@ -17,6 +17,7 @@ import Input from '../../components/input';
 import logoImg from '../../assets/logo.png';
 import Button from '../../components/button';
 
+import { useAuth } from '../../hooks/auth';
 import { signInSchema } from './dataSchema';
 import { ValidationError } from '../SignUp/dataSchema';
 
@@ -34,28 +35,30 @@ const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
+  const { signIn } = useAuth();
+
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignIn = useCallback(async (data) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSignIn = useCallback(
+    async (data) => {
+      try {
+        formRef.current?.setErrors({});
 
-      await signInSchema.validate(data, { abortEarly: false });
+        await signInSchema.validate(data, { abortEarly: false });
 
-      // await signIn({ email: data.email, password: data.password });
-    } catch (err) {
-      if (err instanceof ValidationError) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors);
+        await signIn({ email: data.email, password: data.password });
+      } catch (err) {
+        if (err instanceof ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        }
 
-        console.log('\n\nCade o erro?');
-        console.log(errors);
+        if (err.response.data.message)
+          Alert.alert('Erro na Autenticação', err.response.data.message);
       }
-
-      if ('err.response.data' in err)
-        Alert.alert('Erro na Autenticação', err.response.data.message);
-    }
-  }, []);
+    },
+    [signIn],
+  );
 
   return (
     <>
